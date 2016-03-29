@@ -1,48 +1,4 @@
 
-/* For Sudoku, there are 9x9x9=729 possible choices (9 numbers to choose for
-   each cell in a 9x9 grid), and 4x9x9=324 constraints with each constraint
-   representing a set of choices that are mutually conflictive with each other.
-   The 324 constraints are classified into 4 categories:
-
-   1. row-column where each cell contains only one number
-   2. box-number where each number appears only once in one 3x3 box
-   3. row-number where each number appears only once in one row
-   4. col-number where each number appears only once in one column
-
-   Each category consists of 81 constraints. We number these constraints from 0
-   to 323. In this program, for example, constraint 0 requires that the (0,0)
-   cell contains only one number; constraint 81 requires that number 1 appears
-   only once in the upper-left 3x3 box; constraint 162 requires that number 1
-   appears only once in row 1; constraint 243 requires that number 1 appears
-   only once in column 1.
-   
-   Noting that a constraint is a subset of choices, we may represent a
-   constraint with a binary vector of 729 elements. Thus we have a 729x324
-   binary matrix M with M(r,c)=1 indicating the constraint c involves choice r.
-   Solving a Sudoku is reduced to finding a subset of choices such that no
-   choices are present in the same constaint. This is equivalent to finding the
-   minimal subset of choices intersecting all constraints, a minimum hitting
-   set problem or a eqivalence of the exact cover problem.
-
-   The 729x324 binary matrix is a sparse matrix, with each row containing 4
-   non-zero elements and each column 9 non-zero elements. In practical
-   implementation, we store the coordinate of non-zero elements instead of
-   the binary matrix itself. We use a binary row vector to indicate the
-   constraints that have not been used and use a column vector to keep the
-   number of times a choice has been forbidden. When we set a choice, we will
-   use up 4 constraints and forbid other choices in the 4 constraints. When we
-   make wrong choices, we will find an unused constraint with all choices
-   forbidden, in which case, we have to backtrack to make new choices. Once we
-   understand what the 729x324 matrix represents, the backtracking algorithm
-   itself is easy.
-
-   A major difference between the algorithm implemented here and Guenter
-   Stertenbrink's suexco.c lies in how to count the number of the available
-   choices for each constraint. Suexco.c computes the count with a loop, while
-   the algorithm here keeps the count in an array. The latter is a little more
-   complex to implement as we have to keep the counts synchronized all the time,
-   but it is 50-100% faster, depending on the input.
- */
 
 function sudoku_solver() {
 	var C = [], R = []
