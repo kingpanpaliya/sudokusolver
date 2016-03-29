@@ -10,6 +10,20 @@
 
 var solver = sudoku_solver();
 
+function solve() {
+	// solve the puzzles in the textarea
+	var s = document.getElementById('text').value.split("\n")
+	var v = '', time_beg = new Date().getTime(), cnt = 0;
+	for (var i = 0; i < s.length; ++i) {
+		if (s[i].length >= 81) {
+			var x = solver(s[i])
+			v += x[0].join('') + "\n" // output the first solution only
+			++cnt;
+		}
+	}
+	document.getElementById('text').value = v
+	var t = (new Date().getTime() - time_beg)/1000.0;
+	var t2 = Math.floor(t / cnt * 10000) / 10000
 	document.getElementById('runtime').innerHTML = "Solving "+cnt+" Sudokus in "+ t + " seconds (" + t2 + " sec / Sudoku)";
 	// solve the puzzle in the grid
 	var n_hints = 0;
@@ -124,4 +138,4 @@ like <a href="Sudoku.html?q=.......12........3..23..4....18....5.6..7.8.......9.
 
 
 </body>
-</html>
+</html> 
